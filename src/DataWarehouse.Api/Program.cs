@@ -6,6 +6,10 @@ using DataWarehouse.Infrastructure.Repositories;
 using DataWarehouse.Infrastructure.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using DataWarehouse.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<DataWarehouseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // register repositories and services
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -44,6 +50,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Register endpoints
 app.MapProductEndpoints();

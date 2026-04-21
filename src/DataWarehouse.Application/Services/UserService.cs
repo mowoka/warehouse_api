@@ -8,11 +8,13 @@ public class UserService
 {
     private readonly IUserRepository _repository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtTokenService _jwtTokenService;
 
-    public UserService(IUserRepository repository, IPasswordHasher passwordHasher)
+    public UserService(IUserRepository repository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
     {
         _repository = repository;
         _passwordHasher = passwordHasher;
+        _jwtTokenService = jwtTokenService;
     }
 
     public Task<IEnumerable<User>> GetAllAsync()
@@ -25,5 +27,15 @@ public class UserService
     {
         user.Password = _passwordHasher.Hash(user.Password);
         return _repository.AddAsync(user);
+    }
+
+    public async Task<string?> LoginAsync(string email, string password)
+    {
+        var user = await _repository.GetByEmailAsync(email);
+        if(user is null || !user.IsActive) return null;
+        if(!_passwordHasher.Verify(password, user.Password)) return null;
+
+        await _repository.UpdateLastLoginAsync(user);
+        return _jwtTokenService.GenerateToken(user);
     }
 }
