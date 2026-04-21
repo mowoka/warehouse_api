@@ -6,9 +6,6 @@ using DataWarehouse.Infrastructure.Repositories;
 using DataWarehouse.Infrastructure.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using DataWarehouse.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DataWarehouse.Application.DTOs;
 using DataWarehouse.Application.Services;
 
@@ -17,12 +18,30 @@ public static class UserEndpoints
         .WithName("Login")
         .WithTags("Auth");
 
-        app.MapGet("/users", async (UserService service) =>
+
+        app.MapGet("/me", async (ClaimsPrincipal user, UserService service) =>
         {
-            var users = await service.GetAllAsync();
-            return Results.Ok(users);
+            var userIdStr = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userIdStr is null) return Results.Unauthorized();
+            var userProfile = await service.GetUserByIdAsync(int.Parse(userIdStr));
+            if(userProfile is null) return Results.NotFound();
+            
+            var userProfileDto = new UserProfile(
+                UserId: userProfile.UserId,
+                Name: userProfile.Name,
+                Email: userProfile.Email,
+                Role: userProfile.Role,
+                IsActive: userProfile.IsActive,
+                LastLogin: userProfile.LastLogin.ToString()   
+            );
+
+            return Results.Ok(new { userProfile = userProfileDto });
+
         })
-        .WithName("GetAllUsers")
-        .WithTags("Users");
+        .WithName("GetProfile")
+        .WithTags("Profile")
+        .RequireAuthorization();
+
+
     }
 }
