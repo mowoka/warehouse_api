@@ -10,6 +10,7 @@ A RESTful Web API built with **ASP.NET Core (.NET 10)** following a clean layere
 - [Architecture](#architecture)
 - [OOP Concepts Applied](#oop-concepts-applied)
 - [Getting Started](#getting-started)
+- [JWT Authentication](#jwt-authentication)
 - [Database Migration](#database-migration)
 - [Adding a New Seeder](#adding-a-new-seeder)
 - [Adding a New Endpoint Group](#adding-a-new-endpoint-group)
@@ -22,27 +23,41 @@ A RESTful Web API built with **ASP.NET Core (.NET 10)** following a clean layere
 ```
 src/
 ├── DataWarehouse.Domain/           # Core entities (no dependencies)
-│   └── Product.cs
+│   ├── Product.cs
+│   └── User.cs
 │
 ├── DataWarehouse.Application/      # Business logic & contracts
+│   ├── DTOs/
+│   │   └── LoginRequest.cs
 │   ├── Interfaces/
-│   │   └── IProductRepository.cs
+│   │   ├── IProductRepository.cs
+│   │   ├── IUserRepository.cs
+│   │   ├── IPasswordHasher.cs
+│   │   └── IJwtTokenService.cs
 │   └── Services/
-│       └── ProductService.cs
+│       ├── ProductService.cs
+│       └── UserService.cs
 │
 ├── DataWarehouse.Infrastructure/   # Database & external concerns
 │   ├── DataWarehouseContext.cs
+│   ├── PasswordHasher.cs
+│   ├── JwtTokenService.cs
 │   ├── Migrations/
 │   ├── Repositories/
-│   │   └── ProductRepository.cs
+│   │   ├── ProductRepository.cs
+│   │   └── UserRepository.cs
 │   └── Seeders/
 │       ├── ISeeder.cs
 │       ├── DatabaseSeeder.cs
-│       └── ProductSeeder.cs
+│       ├── ProductSeeder.cs
+│       └── UserSeeder.cs
 │
 └── DataWarehouse.Api/              # Entry point, HTTP layer
     ├── Endpoints/
-    │   └── ProductEndpoints.cs
+    │   ├── ProductEndpoints.cs
+    │   └── UserEndpoints.cs
+    ├── Extensions/
+    │   └── AuthExtensions.cs
     ├── Program.cs
     └── appsettings.json
 ```
@@ -147,7 +162,7 @@ dotnet run
 
 Open the Scalar API UI in your browser at the URL shown in the terminal output, e.g.:
 ```
-http://localhost:5000/scalar/v1
+http://localhost:5163/scalar/v1
 ```
 
 ---
@@ -281,6 +296,56 @@ app.MapOrderEndpoints(); // add this line
 
 ---
 
+## JWT Authentication
+
+This project uses **JWT Bearer** tokens for authentication. Protected endpoints require a valid token in the `Authorization` header.
+
+### Configuration
+
+Add the following section to `src/DataWarehouse.Api/appsettings.json`:
+
+```json
+{
+  "Jwt": {
+    "Key": "your-super-secret-key-minimum-32-characters!!",
+    "Issuer": "DataWarehouse",
+    "Audience": "DataWarehouse",
+    "ExpiresInHours": 8
+  }
+}
+```
+
+> **Security:** Never commit the `Key` to source control. Use environment variables or .NET User Secrets in production.
+
+### How It Works
+
+1. Client sends `POST /auth/login` with email and password.
+2. Server verifies credentials using BCrypt and returns a signed JWT token.
+3. Client includes the token in subsequent requests:
+   ```
+   Authorization: Bearer <token>
+   ```
+4. JWT middleware validates the token on every protected endpoint.
+
+The token contains the following claims: `UserId`, `Email`, `Role`.
+
+### Protecting an Endpoint
+
+Add `.RequireAuthorization()` to any endpoint:
+
+```csharp
+app.MapGet("/users", async (UserService service) => { ... })
+    .RequireAuthorization();
+```
+
+To restrict by role:
+
+```csharp
+.RequireAuthorization(policy => policy.RequireRole("Admin"));
+```
+
+---
+
 ## API Documentation
 
 Scalar API documentation is available in the **Development** environment at:
@@ -291,7 +356,29 @@ http://localhost:<port>/scalar/v1
 
 ### Available Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/products` | Get all products |
-| GET | `/products/{id}` | Get a product by ID |
+| Method | Path | Auth Required | Description |
+|--------|------|:---:|-------------|
+| POST | `/auth/login` | No | Login and receive a JWT token |
+| GET | `/users` | Yes | Get all users |
+| GET | `/products` | No | Get all products |
+| GET | `/products/{id}` | No | Get a product by ID |
+
+### Login Request Example
+
+```json
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}
+```
+
+### Login Response Example
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
