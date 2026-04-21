@@ -11,14 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+// register infrastructure services
 builder.Services.AddDbContext<DataWarehouseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+// register repositories and services
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserService>();
+
 
 // Register seeders
 builder.Services.AddScoped<ISeeder, ProductSeeder>();
+builder.Services.AddScoped<ISeeder, UserSeeder>();
 builder.Services.AddScoped<DatabaseSeeder>();
 
 var app = builder.Build();
@@ -40,5 +47,6 @@ app.UseHttpsRedirection();
 
 // Register endpoints
 app.MapProductEndpoints();
+app.MapUserEndpoints();
 
 app.Run();
