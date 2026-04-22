@@ -13,6 +13,11 @@ public static class ProductEndpoints
         app.MapGet("/products/{id}", ProductHandler.GetProductById)
         .WithName("GetProductById")
         .WithTags("Products");
+
+        app.MapPost("/products", ProductHandler.AddProduct)
+        .WithName("AddProduct")
+        .WithTags("Products")
+        .RequireAuthorization();
     }
 }
 

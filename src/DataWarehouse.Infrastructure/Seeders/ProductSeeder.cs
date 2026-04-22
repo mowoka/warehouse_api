@@ -15,7 +15,7 @@ public class ProductSeeder : ISeeder
             new() { Sku = "SKU-003", ProductName = "Office Chair", Category = "Furniture" },
         };
 
-        await context.Products.AddRangeAsync(products);
+        await context.Products.AddRangeAsync();
         await context.SaveChangesAsync();
     }
 }

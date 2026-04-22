@@ -19,9 +19,10 @@ public class ProductRepository : IProductRepository
     public async Task<Product?> GetByIdAsync(int id)
         => await _context.Products.FindAsync(id);
 
-    public async Task AddAsync(Product product)
+    public async Task<Product> AddAsync(Product product)
     {
-        await _context.Products.AddAsync(product);
+        var result = await _context.Products.AddAsync(product);
         await _context.SaveChangesAsync();
+        return result.Entity;
     }
 }
