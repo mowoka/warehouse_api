@@ -24,7 +24,13 @@ public static class AuthExtensions
                     };
             });
             
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("StaffOrAbove",   p=> p.RequireRole("Staff", "Manager", "Admin"));
+            options.AddPolicy("ManagerOrAbove", p => p.RequireRole("Manager", "Admin"));
+            options.AddPolicy("AdminOnly",      p => p.RequireRole("Admin")); 
+        });
+        
         return services;
     }
 }

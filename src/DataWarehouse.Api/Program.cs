@@ -17,6 +17,7 @@ builder.Services.AddOpenApi(options =>
     options.AddDocumentTransformer((document, context, ct) =>
     {
         document.Components ??= new();
+        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
         document.Components.SecuritySchemes.Add("Bearer", new OpenApiSecurityScheme
         {
             Type = SecuritySchemeType.Http,
@@ -63,7 +64,7 @@ if (app.Environment.IsDevelopment())
     {
         options.Authentication = new ScalarAuthenticationOptions
         {
-            PreferredSecurityScheme = "Bearer"
+            PreferredSecuritySchemes = ["Bearer"]
         };
     });
 }
