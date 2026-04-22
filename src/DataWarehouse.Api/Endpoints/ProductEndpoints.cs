@@ -8,11 +8,13 @@ public static class ProductEndpoints
     {
         app.MapGet("/products", ProductHandler.GetProducts)
         .WithName("GetAllProducts")
-        .WithTags("Products");
+        .WithTags("Products")
+        .RequireAuthorization();
 
         app.MapGet("/products/{id}", ProductHandler.GetProductById)
         .WithName("GetProductById")
-        .WithTags("Products");
+        .WithTags("Products")
+        .RequireAuthorization();
 
         app.MapPost("/products", ProductHandler.AddProduct)
         .WithName("AddProduct")
