@@ -41,6 +41,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IInventoryBatchRepository, InventoryBatchRepository>();
+builder.Services.AddScoped<InventoryBatchService>();
 
 
 // Register seeders
@@ -76,5 +78,6 @@ app.UseAuthorization();
 // Register endpoints
 app.MapProductEndpoints();
 app.MapUserEndpoints();
+app.MapInventoryBatchEndpoints();
 
 app.Run();
