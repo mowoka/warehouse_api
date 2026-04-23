@@ -17,8 +17,11 @@ public class UserService
         _jwtTokenService = jwtTokenService;
     }
 
-    public Task<IEnumerable<User>> GetAllAsync()
-        => _repository.GetAllAsync();
+    public Task<IEnumerable<User>> GetAllAsync(int skip, int take)
+        => _repository.GetAllAsync(skip, take);
+
+    public Task<int> CountTotalUsersAsync()
+        => _repository.CountTotalUsersAsync();
 
     public Task<User?> GetUserByIdAsync(int id)
         => _repository.GetByIdAsync(id);

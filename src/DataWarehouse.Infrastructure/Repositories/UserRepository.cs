@@ -12,9 +12,17 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> GetAllAsync()
-        => await _context.Users.ToListAsync();
+    public async Task<IEnumerable<User>> GetAllAsync(int skip, int take)
+        => await _context.Users
+        .OrderBy(u => u.UserId)
+        .ThenByDescending(u => u.UserId)
+        .Skip(skip)
+        .Take(take)
+        .ToListAsync();
     
+    public async Task<int> CountTotalUsersAsync()
+        => await _context.Users.CountAsync();
+
     public async Task<User?> GetByIdAsync(int id)
         => await _context.Users.FindAsync(id);
     

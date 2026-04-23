@@ -2,11 +2,19 @@ using DataWarehouse.Domain;
 
 namespace DataWarehouse.Application.DTOs;
 
+public record PaginationMeta(int Page, int PageSize, int TotalCount)
+{
+    public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+    public bool HasNextPage => Page < TotalPages;
+    public bool HasPreviousPage => Page > 1;
+}
+
 public class ApiResponse<T>
 {
     public bool Sucess { get; set; }
     public string Message { get; set; } = string.Empty;
     public T? Data { get; set; }
+    public PaginationMeta? Pagination { get; set; }
     
     public static ApiResponse<T> Ok(T data, string message = "")
     {
@@ -15,6 +23,16 @@ public class ApiResponse<T>
             Sucess = true,
             Message = message,
             Data = data
+        };
+    }
+    public static ApiResponse<T> Ok(T data, PaginationMeta pagination, string message = "")
+    {
+        return new ApiResponse<T>
+        {
+            Sucess = true,
+            Message = message,
+            Data = data,
+            Pagination = pagination
         };
     }
 

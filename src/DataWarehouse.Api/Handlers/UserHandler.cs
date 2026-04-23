@@ -25,7 +25,7 @@ public static class UserHandler
         var userProfile = await service.GetUserByIdAsync(int.Parse(userIdStr));
         if(userProfile is null) return Results.NotFound();
             
-        var profile = new UserProfile(
+        var profile = new UserModel(
             UserId: userProfile.UserId,
             Name: userProfile.Name,
             Email: userProfile.Email,
@@ -35,5 +35,28 @@ public static class UserHandler
         );
 
     return Results.Ok(ApiResponse<object>.Ok(profile, "Get Profile Successful"));
+    }
+
+    public static async Task<IResult> GetAllUsers([AsParameters] PageRequest request,UserService service)
+    {
+        var users = await service.GetAllAsync(request.Skip, request.Take);
+        var totalUsers = await service.CountTotalUsersAsync();
+
+        var userProfiles = users.Select(u => new UserModel(
+            UserId: u.UserId,
+            Name: u.Name,
+            Email: u.Email,
+            Role: u.Role,
+            IsActive: u.IsActive, 
+            LastLogin: u.LastLogin.ToString()
+        )).ToList();
+
+        var paginationMeta = new PaginationMeta(
+            Page: request.page,
+            PageSize: request.pageSize,
+            TotalCount: totalUsers
+        );
+
+        return Results.Ok(ApiResponse<IEnumerable<UserModel>>.Ok(userProfiles, paginationMeta, "Get All Users Successful"));
     }
 }

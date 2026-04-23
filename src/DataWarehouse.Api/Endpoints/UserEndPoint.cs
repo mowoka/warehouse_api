@@ -21,5 +21,10 @@ public static class UserEndpoints
         .WithTags("Profile")
         .RequireAuthorization();
 
+        app.MapGet("/users", UserHandler.GetAllUsers)
+        .WithName("GetAllUsers")
+        .WithTags("Users")
+        .RequireAuthorization("AdminOnly");
+
     }
 }
