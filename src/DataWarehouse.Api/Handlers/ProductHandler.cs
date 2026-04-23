@@ -10,13 +10,16 @@ public static class ProductHandler
     public static async Task<IResult> GetProducts(ProductService service)
     {
         var products = await service.GetAllProductsAsync();
-        return Results.Ok(products);
+        return Results.Ok(ApiResponse<IEnumerable<Product>>.Ok(products, "Get Products Successful"));
     }
 
     public static async Task<IResult> GetProductById(int id, ProductService service)
     {
         var product = await service.GetProductByIdAsync(id);
-        return product is not null ? Results.Ok(product) : Results.NotFound();
+        if(product is null)
+            return Results.NotFound(ApiResponse<object>.Fail("Product not found"));
+
+        return Results.Ok(ApiResponse<object>.Ok(product, "Get Product Successful"));   
     }
 
     public static async Task<IResult> AddProduct(ProductRequest request, ProductService service)
@@ -29,6 +32,6 @@ public static class ProductHandler
         
         var product = await service.AddProductAsync(body);
 
-        return Results.Ok(product);
+        return Results.Ok(ApiResponse<Product>.Ok(product, "Add Product Successful"));
     }
 }

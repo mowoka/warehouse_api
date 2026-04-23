@@ -10,7 +10,7 @@ public static class UserHandler
     {
         var token = await service.LoginAsync(request.Email, request.Password);
         if(token == null) return Results.Unauthorized();
-        return Results.Ok(new { Token = token });
+        return Results.Ok(ApiResponse<object>.Ok(new {token}, "Login Successful"));
     }
 
     public static async Task<IResult> Logout()
@@ -25,7 +25,7 @@ public static class UserHandler
         var userProfile = await service.GetUserByIdAsync(int.Parse(userIdStr));
         if(userProfile is null) return Results.NotFound();
             
-        var userProfileDto = new UserProfile(
+        var profile = new UserProfile(
             UserId: userProfile.UserId,
             Name: userProfile.Name,
             Email: userProfile.Email,
@@ -34,6 +34,6 @@ public static class UserHandler
             LastLogin: userProfile.LastLogin.ToString()   
         );
 
-        return Results.Ok(new { userProfile = userProfileDto });
+    return Results.Ok(ApiResponse<object>.Ok(profile, "Get Profile Successful"));
     }
 }

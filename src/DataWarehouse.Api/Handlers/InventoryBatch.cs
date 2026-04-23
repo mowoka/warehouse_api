@@ -9,19 +9,22 @@ public static class InventoryBatchHandler
     public static async Task<IResult> GetAll(InventoryBatchService service)
     {
         var batches = await service.GetAllAsync();
-        return Results.Ok(batches);
+        return Results.Ok(ApiResponse<IEnumerable<InventoryBatch>>.Ok(batches, "Get Inventory Batches Successful"));
     }
 
     public static async Task<IResult> GetByBatchId (Guid batchId, InventoryBatchService service)
     {
         var batch = await service.GetByIdAsync(batchId);
-        return batch is not null ? Results.Ok(batch) : Results.NotFound();
+        if(batch is null)
+            return Results.NotFound(ApiResponse<object>.Fail("Inventory Batch not found"));
+
+        return Results.Ok(ApiResponse<object>.Ok(batch, "Get Inventory Batch Successful"));
     }
 
     public static async Task<IResult> Add(InventoryBatchRequest request, InventoryBatchService service)
     {
         if(!Enum.TryParse<BatchStatus>(request.Status, ignoreCase: true, out var status))
-        return Results.BadRequest("Invalid status. Use: Available, Empty, or Expired.");
+            return Results.BadRequest(ApiResponse<object>.Fail("Invalid status. Use: Available, Empty, or Expired."));
 
         var batch = new InventoryBatch
         {
@@ -34,6 +37,6 @@ public static class InventoryBatchHandler
         };
 
         var result = await service.AddAsync(batch);
-        return Results.Ok(result);
+        return Results.Ok(ApiResponse<InventoryBatch>.Ok(result, "Add Inventory Batch Successful"));
     }
 }
