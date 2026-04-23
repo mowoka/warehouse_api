@@ -14,6 +14,7 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> GetAllAsync(int skip, int take)
         => await _context.Users
+        .OrderByDescending(u => u.UserId)
         .Skip(skip)
         .Take(take)
         .ToListAsync();

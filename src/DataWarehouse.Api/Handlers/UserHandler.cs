@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using DataWarehouse.Application.DTOs;
 using DataWarehouse.Application.Services;
+using DataWarehouse.Domain;
 
 namespace DataWarehouse.Api.Handlers;
 
@@ -34,7 +35,7 @@ public static class UserHandler
             LastLogin: userProfile.LastLogin.ToString()   
         );
 
-    return Results.Ok(ApiResponse<object>.Ok(profile, "Get Profile Successful"));
+        return Results.Ok(ApiResponse<object>.Ok(profile, "Get Profile Successful"));
     }
 
     public static async Task<IResult> GetAllUsers([AsParameters] PageRequest request,UserService service)
@@ -74,5 +75,25 @@ public static class UserHandler
 
         await service.UpdateUserAsync(user);   
         return Results.Ok(ApiResponse<object>.Ok("User updated successfully"));
+    }
+
+    public static async Task<IResult> CreateUser(UserCreateRequest request,UserService service)
+    {
+        var findUser = await service.GetUserByEmailAsync(request.Email);
+        if(findUser is not null)
+            return Results.BadRequest(ApiResponse<object>.Fail("Email already in use"));
+
+        var newUser = new User()
+        {
+            Name = request.Name,
+            Email = request.Email,
+            Password = request.Password,
+            Role = request.Role,
+            IsActive = request.IsActive
+        };
+
+        await service.AddUserAsync(newUser);
+        
+        return Results.Ok(ApiResponse<object>.Ok("User created successfully"));
     }
 }

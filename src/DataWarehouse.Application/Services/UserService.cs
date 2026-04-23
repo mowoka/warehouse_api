@@ -25,13 +25,13 @@ public class UserService
 
     public Task<User?> GetUserByIdAsync(int id)
         => _repository.GetByIdAsync(id);
-
+    public Task<User?> GetUserByEmailAsync(string email)
+        => _repository.GetByEmailAsync(email);
     public Task AddUserAsync(User user)
     {
         user.Password = _passwordHasher.Hash(user.Password);
         return _repository.AddAsync(user);
     }
-
     public async Task<string?> LoginAsync(string email, string password)
     {
         var user = await _repository.GetByEmailAsync(email);

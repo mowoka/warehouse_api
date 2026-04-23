@@ -30,5 +30,10 @@ public static class UserEndpoints
         .WithName("UpdateUser")
         .WithTags("Users")
         .RequireAuthorization("AdminOnly");
+
+        app.MapPost("/users", UserHandler.CreateUser)
+        .WithName("CreateUser")
+        .WithTags("Users")
+        .RequireAuthorization("AdminOnly");
     }
 }
