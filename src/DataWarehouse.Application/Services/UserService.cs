@@ -41,4 +41,10 @@ public class UserService
         await _repository.UpdateLastLoginAsync(user);
         return _jwtTokenService.GenerateToken(user);
     }
+
+    public Task UpdateUserAsync(User user)
+    {
+        user.Password = _passwordHasher.Hash(user.Password);
+        return _repository.updateAsync(user);
+    }
 }

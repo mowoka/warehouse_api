@@ -26,5 +26,9 @@ public static class UserEndpoints
         .WithTags("Users")
         .RequireAuthorization("AdminOnly");
 
+        app.MapPut("/users/{id}", UserHandler.UpdateUser)
+        .WithName("UpdateUser")
+        .WithTags("Users")
+        .RequireAuthorization("AdminOnly");
     }
 }

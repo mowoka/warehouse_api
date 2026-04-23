@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using DataWarehouse.Domain;
 
 namespace DataWarehouse.Application.DTOs;
@@ -13,9 +14,21 @@ public class ApiResponse<T>
 {
     public bool Sucess { get; set; }
     public string Message { get; set; } = string.Empty;
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public T? Data { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public PaginationMeta? Pagination { get; set; }
     
+    public static ApiResponse<T> Ok(string message = "")
+    {
+        return new ApiResponse<T>
+        {
+            Sucess = true,
+            Message = message,
+        };
+    }
     public static ApiResponse<T> Ok(T data, string message = "")
     {
         return new ApiResponse<T>
@@ -35,7 +48,6 @@ public class ApiResponse<T>
             Pagination = pagination
         };
     }
-
     public static ApiResponse<T> Fail(string message)
     {
         return new ApiResponse<T>

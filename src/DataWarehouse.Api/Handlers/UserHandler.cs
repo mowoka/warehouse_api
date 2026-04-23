@@ -59,4 +59,20 @@ public static class UserHandler
 
         return Results.Ok(ApiResponse<IEnumerable<UserModel>>.Ok(userProfiles, paginationMeta, "Get All Users Successful"));
     }
+
+    public static async Task<IResult> UpdateUser(int id, UserUpdateRequest request, UserService service)
+    {
+        var user  = await service.GetUserByIdAsync(id);
+        if(user is null) return Results.NotFound(ApiResponse<object>.Fail("User not found"));
+        user.Name = request.Name;
+        user.Role = request.Role;
+        if (!string.IsNullOrEmpty(request.Password))
+        {
+            user.Password=  request.Password;
+        }
+        user.IsActive = request.IsActive;
+
+        await service.UpdateUserAsync(user);   
+        return Results.Ok(ApiResponse<object>.Ok("User updated successfully"));
+    }
 }

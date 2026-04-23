@@ -14,8 +14,6 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<User>> GetAllAsync(int skip, int take)
         => await _context.Users
-        .OrderBy(u => u.UserId)
-        .ThenByDescending(u => u.UserId)
         .Skip(skip)
         .Take(take)
         .ToListAsync();
@@ -38,6 +36,12 @@ public class UserRepository : IUserRepository
     public async Task UpdateLastLoginAsync(User user)
     {
         user.LastLogin = DateTime.UtcNow;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task updateAsync(User user)
+    {
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }
