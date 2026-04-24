@@ -7,10 +7,18 @@ namespace DataWarehouse.Api.Handlers;
 
 public static class ProductHandler
 {
-    public static async Task<IResult> GetProducts(ProductService service)
+    public static async Task<IResult> GetProducts([AsParameters] PageRequest request,ProductService service)
     {
-        var products = await service.GetAllProductsAsync();
-        return Results.Ok(ApiResponse<IEnumerable<Product>>.Ok(products, "Get Products Successful"));
+        var products = await service.GetAllProductsAsync(request.Skip, request.Take);
+        var totalProducts = await service.CountTotalProductsAsync();
+
+        var paginationMeta = new PaginationMeta(
+            Page : request.page,
+            PageSize : request.pageSize,
+            TotalCount : totalProducts
+        );
+
+        return Results.Ok(ApiResponse<IEnumerable<Product>>.Ok(products, paginationMeta,"Get Products Successful"));
     }
 
     public static async Task<IResult> GetProductById(int id, ProductService service)

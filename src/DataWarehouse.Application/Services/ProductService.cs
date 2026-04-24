@@ -12,9 +12,10 @@ public class ProductService
         _repository = repository;
     }
 
-    public Task<IEnumerable<Product>> GetAllProductsAsync()
-        => _repository.GetAllAsync();
-
+    public Task<IEnumerable<Product>> GetAllProductsAsync(int skip, int take)
+        => _repository.GetAllAsync(skip, take);
+    public Task<int> CountTotalProductsAsync()
+        => _repository.CountTotalProductsAsync();
     public Task<Product?> GetProductByIdAsync(int id)
         => _repository.GetByIdAsync(id);
 

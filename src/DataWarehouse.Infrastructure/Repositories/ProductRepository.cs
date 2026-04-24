@@ -13,9 +13,15 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Product>> GetAllAsync()
-        => await _context.Products.ToListAsync();
-
+    public async Task<IEnumerable<Product>> GetAllAsync(int skip, int take)
+        => await _context.Products
+        .OrderByDescending(p => p.Id)
+        .Skip(skip)
+        .Take(take)
+        .ToListAsync();
+    
+    public async Task<int> CountTotalProductsAsync()
+        => await _context.Products.CountAsync();
     public async Task<Product?> GetByIdAsync(int id)
         => await _context.Products.FindAsync(id);
 
