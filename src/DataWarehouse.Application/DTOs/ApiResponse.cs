@@ -18,9 +18,6 @@ public class ApiResponse<T>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public T? Data { get; set; }
     
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PaginationMeta? Pagination { get; set; }
-    
     public static ApiResponse<T> Ok(string message = "")
     {
         return new ApiResponse<T>
@@ -36,16 +33,6 @@ public class ApiResponse<T>
             Sucess = true,
             Message = message,
             Data = data
-        };
-    }
-    public static ApiResponse<T> Ok(T data, PaginationMeta pagination, string message = "")
-    {
-        return new ApiResponse<T>
-        {
-            Sucess = true,
-            Message = message,
-            Data = data,
-            Pagination = pagination
         };
     }
     public static ApiResponse<T> Fail(string message)

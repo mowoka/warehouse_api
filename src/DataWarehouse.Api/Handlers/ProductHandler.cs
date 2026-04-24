@@ -18,7 +18,7 @@ public static class ProductHandler
             TotalCount : totalProducts
         );
 
-        return Results.Ok(ApiResponse<IEnumerable<Product>>.Ok(products, paginationMeta,"Get Products Successful"));
+        return Results.Ok(PagedApiResponse<IEnumerable<Product>>.Ok(products, paginationMeta,"Get Products Successful"));
     }
 
     public static async Task<IResult> GetProductById(int id, ProductService service)

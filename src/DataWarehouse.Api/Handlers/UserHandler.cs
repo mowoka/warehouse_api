@@ -58,7 +58,7 @@ public static class UserHandler
             TotalCount: totalUsers
         );
 
-        return Results.Ok(ApiResponse<IEnumerable<UserModel>>.Ok(userProfiles, paginationMeta, "Get All Users Successful"));
+        return Results.Ok(PagedApiResponse<IEnumerable<UserModel>>.Ok(userProfiles, paginationMeta, "Get All Users Successful"));
     }
 
     public static async Task<IResult> UpdateUser(int id, UserUpdateRequest request, UserService service)
