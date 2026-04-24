@@ -8,32 +8,32 @@ public static class UserEndpoints
     {
 
         app.MapPost("/auth/login", UserHandler.Login)
-        .WithName("Login")
-        .WithTags("Auth");
+            .WithName("Login")
+            .WithTags("Auth");
 
         app.MapPost("/auth/logout", UserHandler.Logout)
-        .WithName("Logout")
-        .WithTags("Auth")
-        .RequireAuthorization();
+            .WithName("Logout")
+            .WithTags("Auth")
+            .RequireAuthorization();
 
         app.MapGet("/me", UserHandler.GetProfile)
-        .WithName("GetProfile")
-        .WithTags("Profile")
-        .RequireAuthorization();
+            .WithName("GetProfile")
+            .WithTags("Profile")
+            .RequireAuthorization();
 
         app.MapGet("/users", UserHandler.GetAllUsers)
-        .WithName("GetAllUsers")
-        .WithTags("Users")
-        .RequireAuthorization("AdminOnly");
+            .WithName("GetAllUsers")
+            .WithTags("Users")
+            .RequireAuthorization("AdminOnly");
 
         app.MapPut("/users/{id}", UserHandler.UpdateUser)
-        .WithName("UpdateUser")
-        .WithTags("Users")
-        .RequireAuthorization("AdminOnly");
+            .WithName("UpdateUser")
+            .WithTags("Users")
+            .RequireAuthorization("AdminOnly");
 
         app.MapPost("/users", UserHandler.CreateUser)
-        .WithName("CreateUser")
-        .WithTags("Users")
-        .RequireAuthorization("AdminOnly");
+            .WithName("CreateUser")
+            .WithTags("Users")
+            .RequireAuthorization("AdminOnly");
     }
 }
