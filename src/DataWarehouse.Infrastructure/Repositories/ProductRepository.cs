@@ -31,4 +31,10 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync();
         return result.Entity;
     }
+    public async Task<Product> UpdateAsync(Product product)
+    {
+        _context.Products.Update(product);
+        await _context.SaveChangesAsync();
+        return product;
+    }
 }

@@ -18,7 +18,8 @@ public class ProductService
         => _repository.CountTotalProductsAsync();
     public Task<Product?> GetProductByIdAsync(int id)
         => _repository.GetByIdAsync(id);
-
     public Task<Product> AddProductAsync(Product product)
         => _repository.AddAsync(product);
+    public Task<Product> UpdateProductAsync(Product product)
+        => _repository.UpdateAsync(product);
 }

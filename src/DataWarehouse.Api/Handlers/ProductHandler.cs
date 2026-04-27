@@ -42,4 +42,19 @@ public static class ProductHandler
 
         return Results.Ok(ApiResponse<Product>.Ok(product, "Add Product Successful"));
     }
+
+    public static async Task<IResult> UpdateProduct(int id, ProductUpdateRequest request, ProductService service)
+    {
+        var existingProduct = await service.GetProductByIdAsync(id);
+        if(existingProduct is null)
+            return Results.NotFound(ApiResponse<object>.Fail("Product not found"));
+
+        existingProduct.Sku = request.Sku;
+        existingProduct.ProductName = request.ProductName;
+        existingProduct.Category = request.Category;
+
+        await service.UpdateProductAsync(existingProduct);
+        
+        return Results.Ok(ApiResponse<object>.Ok("Update Product Successful"));
+    }
 }

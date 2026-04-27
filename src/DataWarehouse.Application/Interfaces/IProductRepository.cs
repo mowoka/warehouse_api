@@ -8,4 +8,5 @@ public interface IProductRepository
     Task<int> CountTotalProductsAsync();
     Task<Product?> GetByIdAsync(int id);
     Task<Product> AddAsync(Product product);
+    Task<Product> UpdateAsync(Product product);
 }

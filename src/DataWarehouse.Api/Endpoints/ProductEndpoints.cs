@@ -20,6 +20,11 @@ public static class ProductEndpoints
             .WithName("AddProduct")
             .WithTags("Products")
             .RequireAuthorization();
+
+        app.MapPatch("/products/{id}", ProductHandler.UpdateProduct)
+            .WithName("UpdateProduct")
+            .WithTags("Products")
+            .RequireAuthorization();
     }
 }
 
