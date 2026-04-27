@@ -12,9 +12,10 @@ public class InventoryBatchService
         _repository = repository;
     }
 
-    public Task<IEnumerable<InventoryBatch>> GetAllAsync()
-        => _repository.GetAllAsync();
-    
+    public Task<IEnumerable<InventoryBatch>> GetAllAsync(int skip, int take)
+        => _repository.GetAllAsync(skip, take);
+    public Task<int> CountTotalAsync()
+        => _repository.CountTotalAsync();
     public Task<InventoryBatch?> GetByIdAsync(Guid batchId)
         => _repository.GetByIdAsync(batchId);
 

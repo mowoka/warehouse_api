@@ -6,10 +6,19 @@ namespace DataWarehouse.Api.Handlers;
 
 public static class InventoryBatchHandler
 {
-    public static async Task<IResult> GetAll(InventoryBatchService service)
+    public static async Task<IResult> GetAll([AsParameters] PageRequest request, InventoryBatchService service)
     {
-        var batches = await service.GetAllAsync();
-        return Results.Ok(ApiResponse<IEnumerable<InventoryBatch>>.Ok(batches, "Get Inventory Batches Successful"));
+
+        var batches = await service.GetAllAsync(request.Skip, request.Take);
+        var totalBatches = await service.CountTotalAsync();
+
+        var paginationMeta = new PaginationMeta(
+            Page: request.page,
+            PageSize: request.pageSize,
+            TotalCount: totalBatches
+        );
+
+        return Results.Ok(PagedApiResponse<IEnumerable<InventoryBatch>>.Ok(batches, paginationMeta, "Get Inventory Batches Successful"));
     }
 
     public static async Task<IResult> GetByBatchId (Guid batchId, InventoryBatchService service)
@@ -37,6 +46,7 @@ public static class InventoryBatchHandler
         };
 
         var result = await service.AddAsync(batch);
+        
         return Results.Ok(ApiResponse<InventoryBatch>.Ok(result, "Add Inventory Batch Successful"));
     }
 }
