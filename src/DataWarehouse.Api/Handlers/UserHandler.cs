@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using DataWarehouse.Api.Helpers;
 using DataWarehouse.Application.DTOs;
 using DataWarehouse.Application.Services;
 using DataWarehouse.Domain;
@@ -9,9 +10,17 @@ public static class UserHandler
 {
     public static async Task<IResult> Login(LoginRequest request, UserService service)
     {
+        var emptyFields = ValidationHelper.GetEmptyFields(
+            ("Email", request.Email),
+            ("Password", request.Password)
+        );
+
+        if(emptyFields.Count > 0)
+            return Results.BadRequest(ApiResponse<object>.Fail($"The following fields are required: {string.Join(", ", emptyFields)}"));
+
         var token = await service.LoginAsync(request.Email, request.Password);
-        if(token == null) return Results.Unauthorized();
-        return Results.Ok(ApiResponse<object>.Ok(new {token}, "Login Successful"));
+        if (token is null) return Results.Unauthorized();
+        return Results.Ok(ApiResponse<LoginResponse>.Ok(new LoginResponse(token), "Login Successful"));
     }
 
     public static async Task<IResult> Logout()
@@ -82,6 +91,17 @@ public static class UserHandler
         var findUser = await service.GetUserByEmailAsync(request.Email);
         if(findUser is not null)
             return Results.BadRequest(ApiResponse<object>.Fail("Email already in use"));
+
+        var emptyFields = ValidationHelper.GetEmptyFields(
+            ("Name", request.Name),
+            ("Email", request.Email),
+            ("Password", request.Password),
+            ("Role", request.Role),
+            ("IsActive", request.IsActive.ToString())
+        );
+        
+        if(emptyFields.Count > 0)
+            return Results.BadRequest(ApiResponse<object>.Fail($"The following fields are required: {string.Join(", ", emptyFields)}"));
 
         var newUser = new User()
         {

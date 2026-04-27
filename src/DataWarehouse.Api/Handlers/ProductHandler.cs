@@ -1,3 +1,4 @@
+using DataWarehouse.Api.Helpers;
 using DataWarehouse.Application.DTOs;
 using DataWarehouse.Application.Services;
 using DataWarehouse.Domain;
@@ -32,6 +33,15 @@ public static class ProductHandler
 
     public static async Task<IResult> AddProduct(ProductRequest request, ProductService service)
     {
+        var emptyFields = ValidationHelper.GetEmptyFields(
+            ("sku", request.Sku),
+            ("productName", request.ProductName),
+            ("category", request.Category)
+        );
+
+        if(emptyFields.Count > 0)
+            return Results.BadRequest(ApiResponse<object>.Fail($"The following fields are required: {string.Join(", ", emptyFields)}"));
+
         var body = new Product(){
             Sku = request.Sku,
             ProductName = request.ProductName,

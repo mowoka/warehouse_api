@@ -12,6 +12,7 @@ public static class UserEndpoints
             .WithName("Login")
             .WithTags("Auth")
             .Produces<ApiResponse<LoginResponse>>(StatusCodes.Status201Created)
+            .Produces<ApiErrorResponse>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
 
         app.MapPost("/auth/logout", UserHandler.Logout)
@@ -47,6 +48,7 @@ public static class UserEndpoints
             .WithTags("Users")
             .RequireAuthorization("AdminOnly")
             .Produces(StatusCodes.Status201Created)
+            .Produces<ApiErrorResponse>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
     }
 }
