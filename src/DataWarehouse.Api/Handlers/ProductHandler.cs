@@ -68,6 +68,10 @@ public static class ProductHandler
         existingProduct.ProductName = request.ProductName;
         existingProduct.Category = request.Category;
 
+        var findProduct = await service.FindProductBySkuAsync(request.Sku);
+        if(findProduct is not null && findProduct.Id != existingProduct.Id)
+            return Results.BadRequest(ApiResponse<object>.Fail("Product with the same SKU already exists"));
+
         await service.UpdateProductAsync(existingProduct);
         
         return Results.Ok(ApiResponse<object>.Ok("Update Product Successful"));

@@ -35,6 +35,7 @@ public static class ProductEndpoints
             .WithTags("Products")
             .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
+            .Produces<ApiErrorResponse>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
     }
 }
