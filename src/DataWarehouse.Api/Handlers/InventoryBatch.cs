@@ -19,14 +19,14 @@ public static class InventoryBatchHandler
         );
 
         var result = batches.Select(b => new InventoryBatchModel(
-            product: new ProductModel(b.product!.Id, b.product.Sku, b.product.ProductName, b.product.Category),
+            product: new ProductModel(b.product!.Id, b.product.ProductName,b.product.Sku, b.product.Category),
             PicIn:  new UserPicModel(b.PicIn!.UserId, b.PicIn.Name, b.PicIn.Email, b.PicIn.Role),
             id: b.Id,
             batchId: b.BatchId,
             quantity: b.Quantity,
             remainingQty: b.RemainingQty,
             entryDate: b.EntryDate,
-            Status: b.Status
+            Status: b.Status.ToString()
         )).ToList();
 
         return Results.Ok(PagedApiResponse<IEnumerable<InventoryBatchModel>>.Ok(result, paginationMeta, "Get Inventory Batches Successful"));
@@ -46,7 +46,7 @@ public static class InventoryBatchHandler
             quantity: batch.Quantity,
             remainingQty: batch.RemainingQty,
             entryDate: batch.EntryDate,
-            Status: batch.Status
+            Status: batch.Status.ToString()
         );
         
         return Results.Ok(ApiResponse<object>.Ok(result, "Get Inventory Batch Successful"));
@@ -77,7 +77,7 @@ public static class InventoryBatchHandler
             quantity: batch.Quantity,
             remainingQty: batch.RemainingQty,
             entryDate: batch.EntryDate,
-            Status: batch.Status
+            Status: batch.Status.ToString()
         );
 
         return Results.Ok(ApiResponse<InventoryBatchModel>.Ok(result, "Add Inventory Batch Successful"));

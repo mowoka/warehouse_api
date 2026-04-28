@@ -15,7 +15,7 @@ public class InventoryBatch
     public int ProductId {get; set;}
     public int Quantity {get; set;}
     public int RemainingQty {get; set;}
-    public DateTime EntryDate {get; set;} = DateTime.UtcNow;
+    public DateTime EntryDate {get; set;} = DateTime.Now;
     public int PicInId {get; set;}
     public BatchStatus Status {get; set;} = BatchStatus.Available;
 

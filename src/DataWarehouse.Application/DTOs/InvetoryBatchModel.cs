@@ -10,5 +10,5 @@ public record InventoryBatchModel(
     int quantity,
     int remainingQty,
     DateTime entryDate,
-    BatchStatus Status
+    string Status
 );
