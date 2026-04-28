@@ -36,8 +36,8 @@ public class InventoryBatchRepository : IInventoryBatchRepository
     }
     public async Task<InventoryBatch> AddAsync(InventoryBatch inventory)
     {
-        _context.InventoryBatches.Add(inventory);
+        var inevtoryData = _context.InventoryBatches.Add(inventory);
         await _context.SaveChangesAsync();
-        return inventory;
+        return inevtoryData.Entity;
     }
 }

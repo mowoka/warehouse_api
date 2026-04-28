@@ -62,16 +62,15 @@ public static class InventoryBatchHandler
             ProductId = request.ProductId,
             Quantity = request.Quantity,
             RemainingQty = request.Quantity,
-            EntryDate = request.EntryDate,
             PicInId = request.PicInId,
             Status = status,
         };
 
-        var batch = await service.AddAsync(data);
-
-
+        var batchData = await service.AddAsync(data);
+        var batch = await service.GetByIdAsync(batchData.BatchId);
+        
         var result = new InventoryBatchModel(
-            product: new ProductModel(batch.product!.Id, batch.product.Sku, batch.product.ProductName, batch.product.Category),
+            product: new ProductModel(batch!.product!.Id, batch.product.Sku, batch.product.ProductName, batch.product.Category),
             PicIn:  new UserPicModel(batch.PicIn!.UserId, batch.PicIn.Name, batch.PicIn.Email, batch.PicIn.Role),
             id: batch.Id,
             batchId: batch.BatchId,
