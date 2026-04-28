@@ -10,4 +10,5 @@ public interface IProductRepository
     Task<Product> AddAsync(Product product);
     Task<Product> UpdateAsync(Product product);
     Task<Product?> FindProductBySkuAsync(string sku);
+    Task<IEnumerable<Product>> SearchProductsAsync(string keyword, int skip, int take);
 }

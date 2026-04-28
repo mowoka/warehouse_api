@@ -37,6 +37,13 @@ public static class ProductEndpoints
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ApiErrorResponse>(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
+
+        app.MapGet("/product-search", ProductHandler.SearchProducts)
+            .WithName("SearchProducts")
+            .WithTags("Products")
+            .RequireAuthorization()
+            .Produces<ApiResponse<IEnumerable<Product>>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 }
 

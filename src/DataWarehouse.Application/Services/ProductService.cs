@@ -24,4 +24,6 @@ public class ProductService
         => _repository.UpdateAsync(product);
     public Task<Product?> FindProductBySkuAsync(string sku)
         => _repository.FindProductBySkuAsync(sku);
+    public Task<IEnumerable<Product>> SearchProductsAsync(string keyword, int skip, int take)
+        => _repository.SearchProductsAsync(keyword, skip, take);
 }

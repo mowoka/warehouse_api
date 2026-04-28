@@ -40,4 +40,14 @@ public class ProductRepository : IProductRepository
     public async Task<Product?> FindProductBySkuAsync(string sku)
         => await _context.Products
         .FirstOrDefaultAsync(p => p.Sku == sku);
+    
+    public async Task<IEnumerable<Product>> SearchProductsAsync(string keyword, int skip, int take)
+    {
+        return await _context.Products
+        .Where(p => p.ProductName.Contains(keyword))
+        .OrderByDescending(p => p.Id)
+        .Skip(skip)
+        .Take(take)
+        .ToListAsync();
+    }
 }

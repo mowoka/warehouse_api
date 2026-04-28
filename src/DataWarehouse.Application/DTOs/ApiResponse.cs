@@ -45,9 +45,14 @@ public class ApiResponse<T>
         };
     }
 
-    public static ApiResponse<List<Product>>? Ok(IEnumerable<Product> products, string v)
+    public static ApiResponse<List<T>>? Ok(IEnumerable<T> items, string message = "")
     {
-        throw new NotImplementedException();
+        return new ApiResponse<List<T>>
+        {
+            Sucess = true,
+            Message = message,
+            Data = items.ToList()
+        };
     }
 }
 

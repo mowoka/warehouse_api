@@ -76,4 +76,10 @@ public static class ProductHandler
         
         return Results.Ok(ApiResponse<object>.Ok("Update Product Successful"));
     }
+    public static async Task<IResult> SearchProducts([AsParameters] SearchRequest request, ProductService service)
+    {
+        var products = await service.SearchProductsAsync(request.Keyword, request.Skip, request.Take);
+    
+        return Results.Ok(ApiResponse<IEnumerable<Product>>.Ok(products,"Search Products Successful"));
+    }
 }
