@@ -12,5 +12,5 @@ public interface IUserRepository
   Task AddAsync(User user);
   Task<User?> GetByEmailAsync(string email);
   Task UpdateLastLoginAsync(User user);
-  Task updateAsync(User user);   
+  Task UpdateAsync(User user);
 }

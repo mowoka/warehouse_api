@@ -45,6 +45,6 @@ public class UserService
     public Task UpdateUserAsync(User user)
     {
         user.Password = _passwordHasher.Hash(user.Password);
-        return _repository.updateAsync(user);
+        return _repository.UpdateAsync(user);
     }
 }

@@ -19,13 +19,13 @@ public static class InventoryBatchHandler
         );
 
         var result = batches.Select(b => new InventoryBatchModel(
-            product: new ProductModel(b.product!.Id, b.product.ProductName,b.product.Sku, b.product.Category),
+            Product: new ProductModel(b.product!.Id, b.product.ProductName,b.product.Sku, b.product.Category),
             PicIn:  new UserPicModel(b.PicIn!.UserId, b.PicIn.Name, b.PicIn.Email, b.PicIn.Role),
-            id: b.Id,
-            batchId: b.BatchId,
-            quantity: b.Quantity,
-            remainingQty: b.RemainingQty,
-            entryDate: b.EntryDate,
+            Id: b.Id,
+            BatchId: b.BatchId,
+            Quantity: b.Quantity,
+            RemainingQty: b.RemainingQty,
+            EntryDate: b.EntryDate,
             Status: b.Status.ToString()
         )).ToList();
 
@@ -39,13 +39,13 @@ public static class InventoryBatchHandler
             return Results.NotFound(ApiResponse<object>.Fail("Inventory Batch not found"));
 
         var result = new InventoryBatchModel(
-            product: new ProductModel(batch.product!.Id, batch.product.Sku, batch.product.ProductName, batch.product.Category),
+            Product: new ProductModel(batch.product!.Id, batch.product.Sku, batch.product.ProductName, batch.product.Category),
             PicIn:  new UserPicModel(batch.PicIn!.UserId, batch.PicIn.Name, batch.PicIn.Email, batch.PicIn.Role),
-            id: batch.Id,
-            batchId: batch.BatchId,
-            quantity: batch.Quantity,
-            remainingQty: batch.RemainingQty,
-            entryDate: batch.EntryDate,
+            Id: batch.Id,
+            BatchId: batch.BatchId,
+            Quantity: batch.Quantity,
+            RemainingQty: batch.RemainingQty,
+            EntryDate: batch.EntryDate,
             Status: batch.Status.ToString()
         );
         
@@ -70,13 +70,13 @@ public static class InventoryBatchHandler
         var batch = await service.GetByIdAsync(batchData.BatchId);
         
         var result = new InventoryBatchModel(
-            product: new ProductModel(batch!.product!.Id, batch.product.Sku, batch.product.ProductName, batch.product.Category),
+            Product: new ProductModel(batch!.product!.Id, batch.product.Sku, batch.product.ProductName, batch.product.Category),
             PicIn:  new UserPicModel(batch.PicIn!.UserId, batch.PicIn.Name, batch.PicIn.Email, batch.PicIn.Role),
-            id: batch.Id,
-            batchId: batch.BatchId,
-            quantity: batch.Quantity,
-            remainingQty: batch.RemainingQty,
-            entryDate: batch.EntryDate,
+            Id: batch.Id,
+            BatchId: batch.BatchId,
+            Quantity: batch.Quantity,
+            RemainingQty: batch.RemainingQty,
+            EntryDate: batch.EntryDate,
             Status: batch.Status.ToString()
         );
 

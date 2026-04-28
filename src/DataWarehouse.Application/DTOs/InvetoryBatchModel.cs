@@ -1,14 +1,12 @@
-using DataWarehouse.Domain;
-
 namespace DataWarehouse.Application.DTOs;
 
 public record InventoryBatchModel(
-    ProductModel? product,
+    ProductModel? Product,
     UserPicModel? PicIn,
-    int id,
-    Guid batchId,
-    int quantity,
-    int remainingQty,
-    DateTime entryDate,
+    int Id,
+    Guid BatchId,
+    int Quantity,
+    int RemainingQty,
+    DateTime EntryDate,
     string Status
 );
