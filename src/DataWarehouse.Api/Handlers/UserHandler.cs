@@ -74,6 +74,7 @@ public static class UserHandler
     {
         var user  = await service.GetUserByIdAsync(id);
         if(user is null) return Results.NotFound(ApiResponse<object>.Fail("User not found"));
+        
         user.Name = request.Name;
         user.Role = request.Role;
         if (!string.IsNullOrEmpty(request.Password))

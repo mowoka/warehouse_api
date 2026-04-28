@@ -22,4 +22,6 @@ public class ProductService
         => _repository.AddAsync(product);
     public Task<Product> UpdateProductAsync(Product product)
         => _repository.UpdateAsync(product);
+    public Task<Product?> FindProductBySkuAsync(string sku)
+        => _repository.FindProductBySkuAsync(sku);
 }

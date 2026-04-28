@@ -37,4 +37,7 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync();
         return product;
     }
+    public async Task<Product?> FindProductBySkuAsync(string sku)
+        => await _context.Products
+        .FirstOrDefaultAsync(p => p.Sku == sku);
 }

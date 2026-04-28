@@ -41,6 +41,11 @@ public static class ProductHandler
 
         if(emptyFields.Count > 0)
             return Results.BadRequest(ApiResponse<object>.Fail($"The following fields are required: {string.Join(", ", emptyFields)}"));
+        
+        var findProduct = await service.FindProductBySkuAsync(request.Sku);
+
+        if(findProduct is not null)
+            return Results.BadRequest(ApiResponse<object>.Fail("Product with the same SKU already exists"));
 
         var body = new Product(){
             Sku = request.Sku,
